@@ -1,4 +1,3 @@
-import threading
 import mmap
 from time import sleep
 import numpy as np
@@ -16,16 +15,14 @@ class IPC_Data(ctypes.Structure):
 
 def set_data():
     data = IPC_Data()
+    setattr(data, 'index', 65)
+    setattr(data, 'PosX', 1.0)
+    setattr(data, 'PosY', 1.0)
+    setattr(data, 'PosZ', 1.0)
 
     shm.seek(0)
     shm.write(bytes(data));
 
-def track():
-    for i in range(0, 1000):
-        sleep(1.0 / 60.0)
-        set_data()
 
-shm = mmap.mmap(0, 1024*8, "weebking_ipc")
-
-c = threading.Thread(target=track)
-c.start()
+shm = mmap.mmap(0, 1024*1, "ipc0")
+set_data()
